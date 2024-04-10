@@ -15,7 +15,7 @@ public class DataFrame {
 
     //region Ctor
 
-    public DataFrame(String[] label, Object[] values) {
+    public DataFrame(String[] label, Object[][] values) {
 
     }
 
