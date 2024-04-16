@@ -116,7 +116,7 @@ public class DataFrame {
         throw new RuntimeException();
     }
 
-    public int length() {
-        throw new RuntimeException();
+    public int length(String label) {
+        return this.Data.get(label).length;
     }
 }
