@@ -28,6 +28,7 @@ public class DataFrame {
             
             for(int j=0;j<values[i].length;j++)
             {
+                //checking all of those type to cast correctly (yes this list isn't exhaustive)
                 Obj obj;
                 if(values[i][0] instanceof Integer)
                 {
@@ -53,9 +54,13 @@ public class DataFrame {
                 {
                     obj = new Obj<>((Short) values[i][j]);    
                 }
+                else if(values[i][0] instanceof String)
+                {
+                    obj = new Obj<>((String) values[i][j]);
+                }
                 else
                 {
-                    throw new RuntimeException();
+                    throw new RuntimeException("Type not recognised from this list : Long, Float, Integer, Char, String, Short, Double");
                 }
                 
                 currentCol[j]=obj;
@@ -70,26 +75,28 @@ public class DataFrame {
         int length = name.length();
         String[] split = name.split(".");
 
+        //check if file has a format of .csv
         if(split.length==0 || split[1].compareTo("csv")!=0)
         {
-            throw new RuntimeException();
+            throw new RuntimeException("File isn't a .csv");
         }
         try (BufferedReader ReadFile = new BufferedReader(new InputStreamReader(new FileInputStream(file)));){
             String line=ReadFile.readLine();
             if(line == null)
             {
                 System.out.println("File is empty");
-
             }
             else
             {
                 Data = new HashMap<>();
+                //first line is the list of row names
                 String[] Row = line.split(",");
                 String[] Columns;
                 Obj[] DataConverted;
                 int k=0;
                 while((line= ReadFile.readLine()) != null)
                 {
+                    //read column by column
                     Columns = line.split(",");
                     DataConverted = new Obj[Columns.length];
                     for(int i =0;i< Columns.length;i++) {
@@ -117,7 +124,7 @@ public class DataFrame {
     }
 
     private Obj Convert(String data)
-    //use to convert string to a object
+    //use to convert from a string to an object
     {
 
         //it's a Integer
