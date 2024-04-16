@@ -39,9 +39,21 @@ public class DataFrame {
 
     //region display
 
-    @Override
+       @Override
     public String toString() {
-        throw new RuntimeException();
+        Set<String> keys = this.Data.keySet();
+        System.out.print("      ");
+        for (String key : keys){
+            System.out.print("["+key+"] - ");
+        }
+        System.out.println("");
+        System.out.print("      ");
+        for(int i = 0; i <this.length(); i++){
+            for(String key : keys){
+                System.out.print(" "+this.Data.get(key)[i]+"  - ");
+            }
+            System.out.println("");
+        }
     }
 
     public String toString(int nb) {
