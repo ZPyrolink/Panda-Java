@@ -116,4 +116,31 @@ class DataFrameTest {
 
         assertEquals(expected, result);
     }
+
+    @Test
+    void testMax() {
+        Map<String, Double> expected = new HashMap<>();
+
+        for (int l = 0; l < labels.length; l++) {
+            if (data[0][l] instanceof String || data[0][l] instanceof Character)
+                continue;
+
+            if (values[l][0] instanceof Byte)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Byte[]::new)).max(Byte::compareTo).get()));
+            else if (values[l][0] instanceof Short)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Short[]::new)).max(Short::compareTo).get()));
+            else if (values[l][0] instanceof Integer)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Integer[]::new)).max(Integer::compareTo).get()));
+            else if (values[l][0] instanceof Long)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Long[]::new)).max(Long::compareTo).get()));
+            else if (values[l][0] instanceof Float)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Float[]::new)).max(Float::compareTo).get()));
+            else if (values[l][0] instanceof Double)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Double[]::new)).max(Double::compareTo).get()));
+        }
+
+        Map<String, Double> result = frame.max();
+
+        assertEquals(expected, result);
+    }
 }

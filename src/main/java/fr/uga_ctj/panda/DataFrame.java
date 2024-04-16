@@ -261,8 +261,29 @@ public class DataFrame {
         return result;
     }
 
-    public Map<String, Float> max() {
-        throw new RuntimeException();
+    public Map<String, Double> max() {
+        Map<String, Double> result = new HashMap<>();
+
+        for (String label : Data.keySet()) {
+            Obj[] tmp = Data.get(label);
+
+            if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
+                continue;
+
+            Obj<Double>[] objs = (Obj<Double>[]) tmp;
+            double currentMax = Double.MIN_VALUE;
+
+            for (Obj obj : objs) {
+                double d = numeric2double(obj.getValue());
+
+                if (d > currentMax)
+                    currentMax = d;
+            }
+
+            result.put(label, currentMax);
+        }
+
+        return result;
     }
 
     public int length() {
