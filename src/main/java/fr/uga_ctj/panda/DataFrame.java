@@ -2,12 +2,8 @@ package fr.uga_ctj.panda;
 
 import lombok.Getter;
 
-import java.io.FileInputStream;
-import java.lang.reflect.Array;
-import java.util.*;
 import java.io.*;
-import java.util.Map;
-import java.util.HashMap;
+import java.util.*;
 
 public class DataFrame {
     static class Obj<T> {
@@ -17,6 +13,17 @@ public class DataFrame {
         public Obj(T value) {
             this.value = value;
         }
+
+        @Override
+        public boolean equals(Object o) {
+            if (this == o)
+                return true;
+            if (o == null || getClass() != o.getClass())
+                return false;
+
+            Obj<T> obj = (Obj<T>) o;
+            return value.equals(obj.value);
+        }
     }
 
     private Map<String, Obj[]> Data;
@@ -25,45 +32,30 @@ public class DataFrame {
     //x and y are switch
     public DataFrame(String[] label, Object[][] values) {
         Data = new HashMap<>();
-        for(int i=0;i<label.length;i++)
-        {
+        for (int i = 0; i < label.length; i++) {
             Obj[] currentCol = new Obj[values[i].length];
-            
-            for(int j=0;j<values[i].length;j++)
-            {
+
+            for (int j = 0; j < values[i].length; j++) {
                 Obj obj;
-                if(values[i][0] instanceof Integer)
-                {
+                if (values[i][0] instanceof Integer) {
                     obj = new Obj<>((Integer) values[i][j]);
-                }
-                else if(values[i][0] instanceof Double)
-                {
+                } else if (values[i][0] instanceof Double) {
                     obj = new Obj<>((Double) values[i][j]);
-                }
-                else if(values[i][0] instanceof Float)
-                {
+                } else if (values[i][0] instanceof Float) {
                     obj = new Obj<>((Float) values[i][j]);
-                }
-                else if(values[i][0] instanceof Character)
-                {
+                } else if (values[i][0] instanceof Character) {
                     obj = new Obj<>((Character) values[i][j]);
-                }
-                else if(values[i][0] instanceof Long)
-                {
+                } else if (values[i][0] instanceof Long) {
                     obj = new Obj<>((Long) values[i][j]);
-                }
-                else if(values[i][0] instanceof Short)
-                {
+                } else if (values[i][0] instanceof Short) {
                     obj = new Obj<>((Short) values[i][j]);
-                }
-                else
-                {
+                } else {
                     throw new RuntimeException();
                 }
-                
-                currentCol[j]=obj;
+
+                currentCol[j] = obj;
             }
-            Data.put(label[i],currentCol);
+            Data.put(label[i], currentCol);
         }
 
     }
@@ -73,39 +65,34 @@ public class DataFrame {
         int length = name.length();
         String[] split = name.split(".");
 
-        if(split.length==0 || split[1].compareTo("csv")!=0)
-        {
+        if (split.length == 0 || split[1].compareTo("csv") != 0) {
             throw new RuntimeException();
         }
-        try (BufferedReader ReadFile = new BufferedReader(new InputStreamReader(new FileInputStream(file)));){
-            String line=ReadFile.readLine();
-            if(line == null)
-            {
+        try (BufferedReader ReadFile = new BufferedReader(new InputStreamReader(new FileInputStream(file)));) {
+            String line = ReadFile.readLine();
+            if (line == null) {
                 System.out.println("File is empty");
 
-            }
-            else
-            {
+            } else {
                 Data = new HashMap<>();
                 String[] Row = line.split(",");
                 String[] Columns;
                 Obj[] DataConverted;
-                int k=0;
-                while((line= ReadFile.readLine()) != null)
-                {
+                int k = 0;
+                while ((line = ReadFile.readLine()) != null) {
                     Columns = line.split(",");
                     DataConverted = new Obj[Columns.length];
-                    for(int i =0;i< Columns.length;i++) {
-                        DataConverted[i]=Convert(Columns[i]);
+                    for (int i = 0; i < Columns.length; i++) {
+                        DataConverted[i] = Convert(Columns[i]);
                     }
-                    Data.put(Row[k],DataConverted);
+                    Data.put(Row[k], DataConverted);
                     k++;
-                };
+                }
+                ;
             }
 
 
-        }catch(IOException e)
-        {
+        } catch (IOException e) {
             System.out.println(e);
         }
 
@@ -115,50 +102,90 @@ public class DataFrame {
 
     //region selection
 
-    public DataFrame get(int index){
-        throw new RuntimeException();
-    }
-
     private Obj Convert(String data)
     //use to convert string to a object
     {
 
         //it's a Integer
-        try
-        {
-            return new Obj<>((Integer)Integer.parseInt(data));
-        }catch (NumberFormatException e){}
+        try {
+            return new Obj<>((Integer) Integer.parseInt(data));
+        } catch (NumberFormatException e) {
+        }
 
         //it's a Float
-        try
-        {
-            return new Obj<>((Float)Float.parseFloat(data));
-        }catch (NumberFormatException e){}
+        try {
+            return new Obj<>((Float) Float.parseFloat(data));
+        } catch (NumberFormatException e) {
+        }
 
         //it's a Long
-        try
-        {
-            return new Obj<>((Long)Long.parseLong(data));
-        }catch (NumberFormatException e){}
+        try {
+            return new Obj<>((Long) Long.parseLong(data));
+        } catch (NumberFormatException e) {
+        }
 
         //it's a double
-        try
-        {
-            return new Obj<>((Double)Double.parseDouble(data));
-        }catch (NumberFormatException e){}
+        try {
+            return new Obj<>((Double) Double.parseDouble(data));
+        } catch (NumberFormatException e) {
+        }
 
         //it's a short
-        try
-        {
-            return new Obj<>((Short)Short.parseShort(data));
-        }catch (NumberFormatException e){}
+        try {
+            return new Obj<>((Short) Short.parseShort(data));
+        } catch (NumberFormatException e) {
+        }
 
         //string or char
-        return new Obj<>((String)data);
+        return new Obj<>((String) data);
     }
 
+    /**
+     * Get a specific line of the DataFrame
+     *
+     * @param index Index of the line
+     * @return A new DataFrame corresponding to the specified line
+     */
+    public DataFrame get(int index) {
+        if (index >= length())
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound (> " + length() + ")");
+
+        if (index < 0)
+            throw new IndexOutOfBoundsException("Index " + index + " is out of bound (< 0)");
+
+        Set<String> keys = Data.keySet();
+        int labelsNb = keys.size();
+
+        String[] labels = new String[labelsNb];
+        Object[][] values = new Object[labelsNb][1];
+
+        int labelIndex = 0;
+        for (String label : keys) {
+            labels[labelIndex] = label;
+            values[labelIndex][0] = Data.get(label)[index].getValue();
+            labelIndex++;
+        }
+
+        return new DataFrame(labels, values);
+    }
+
+    /**
+     * Get a specific column of the DataFrame
+     *
+     * @param label Label of the column
+     * @return A new DataFrame corresponding to the specified column
+     */
     public DataFrame get(String label) {
-        throw new RuntimeException();
+        Obj[] data = Data.get(label);
+        if (data == null)
+            throw new StringIndexOutOfBoundsException("Label " + label + " doesn't exists !");
+        int length = data.length;
+        Object[][] values = new Object[1][length];
+
+        for (int i = 0; i < length; i++)
+            values[0][i] = data[i].getValue();
+
+        return new DataFrame(new String[] { label }, values);
     }
 
     //endregion
@@ -197,5 +224,40 @@ public class DataFrame {
     public int length() {
 
         return this.Data.get(this.Data.keySet().iterator().next()).length;
+    }
+
+    //endregion
+
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o)
+            return true;
+
+        if (o == null || getClass() != o.getClass())
+            return false;
+
+        DataFrame dataFrame = (DataFrame) o;
+        Set<Map.Entry<String, Obj[]>> entries = Data.entrySet();
+        Set<Map.Entry<String, Obj[]>> otherEntries = dataFrame.Data.entrySet();
+
+        if (entries.size() != otherEntries.size())
+            return false;
+
+        Iterator<Map.Entry<String, Obj[]>> entriesIt = entries.iterator();
+        Iterator<Map.Entry<String, Obj[]>> otherEntriesIt = otherEntries.iterator();
+
+        for (int i = 0; i < entries.size(); i++) {
+            Map.Entry<String, Obj[]> entry = entriesIt.next();
+            Map.Entry<String, Obj[]> otherEntry = otherEntriesIt.next();
+
+            if (!entry.getKey().equals(otherEntry.getKey()))
+                return false;
+
+            if (!Arrays.equals(entry.getValue(), otherEntry.getValue()))
+                return false;
+        }
+
+        return true;
     }
 }
