@@ -22,11 +22,10 @@ public class DataFrame {
     //region Ctor
     //x and y are switch
     public DataFrame(String[] label, Object[][] values) {
-        Obj[] currentCol = new Obj[values[0].length];
         Data = new HashMap<>();
         for(int i=0;i<label.length;i++)
         {
-            currentCol = new Obj[values[i].length];
+            Obj[] currentCol = new Obj[values[i].length];
             
             for(int j=0;j<values[i].length;j++)
             {
@@ -60,7 +59,7 @@ public class DataFrame {
                     throw new RuntimeException();
                 }
                 
-                currentCol[j]=obj;                
+                currentCol[j]=obj;
             }
             Data.put(label[i],currentCol);
         }
