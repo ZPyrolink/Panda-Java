@@ -17,8 +17,6 @@ faire de l’analyse de données pratique. Notre travail est donc de créer une 
 
 - [Fonctionalités](#Fonctionalités)
 - [Code source](#Code-source)
-- [Dependences](#Dependences)
-- [Documentation](#documentation)
 - [Background](#background)
 
 ## Fonctionalités
