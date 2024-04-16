@@ -3,9 +3,8 @@ package fr.uga_ctj.panda;
 import lombok.Getter;
 
 import java.io.FileInputStream;
-import java.util.Map;
-import java.util.ArrayList;
-import java.util.HashMap;
+import java.lang.reflect.Array;
+import java.util.*;
 
 public class DataFrame {
     static class Obj<T> {
@@ -116,7 +115,8 @@ public class DataFrame {
         throw new RuntimeException();
     }
 
-    public int length(String label) {
-        return this.Data.get(label).length;
+    public int length() {
+
+        return this.Data.get(this.Data.keySet().iterator().next()).length;
     }
 }
