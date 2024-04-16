@@ -2,9 +2,8 @@ package fr.uga_ctj.panda;
 
 import lombok.Getter;
 
-import java.io.FileInputStream;
+import java.io.*;
 import java.util.Map;
-import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DataFrame {
@@ -66,7 +65,46 @@ public class DataFrame {
             
     }
 
-    public DataFrame(FileInputStream stream) {
+    public DataFrame(File file) {
+        String name = file.getName();
+        int length = name.length();
+        String[] split = name.split(".");
+
+        if(split.length==0 || split[1].compareTo("csv")!=0)
+        {
+            throw new RuntimeException();
+        }
+        try (BufferedReader ReadFile = new BufferedReader(new InputStreamReader(new FileInputStream(file)));){
+            String line=ReadFile.readLine();
+            if(line == null)
+            {
+                System.out.println("File is empty");
+
+            }
+            else
+            {
+                Data = new HashMap<>();
+                String[] Row = line.split(",");
+                String[] Columns;
+                Obj[] DataConverted;
+                int k=0;
+                while((line= ReadFile.readLine()) != null)
+                {
+                    Columns = line.split(",");
+                    DataConverted = new Obj[Columns.length];
+                    for(int i =0;i< Columns.length;i++) {
+                        DataConverted[i]=Convert(Columns[i]);
+                    }
+                    Data.put(Row[k],DataConverted);
+                    k++;
+                };
+            }
+
+
+        }catch(IOException e)
+        {
+            System.out.println(e);
+        }
 
     }
 
@@ -76,6 +114,44 @@ public class DataFrame {
 
     public DataFrame get(int index){
         throw new RuntimeException();
+    }
+
+    private Obj Convert(String data)
+    //use to convert string to a object
+    {
+
+        //it's a Integer
+        try
+        {
+            return new Obj<>((Integer)Integer.parseInt(data));
+        }catch (NumberFormatException e){}
+
+        //it's a Float
+        try
+        {
+            return new Obj<>((Float)Float.parseFloat(data));
+        }catch (NumberFormatException e){}
+
+        //it's a Long
+        try
+        {
+            return new Obj<>((Long)Long.parseLong(data));
+        }catch (NumberFormatException e){}
+
+        //it's a double
+        try
+        {
+            return new Obj<>((Double)Double.parseDouble(data));
+        }catch (NumberFormatException e){}
+
+        //it's a short
+        try
+        {
+            return new Obj<>((Short)Short.parseShort(data));
+        }catch (NumberFormatException e){}
+
+        //string or char
+        return new Obj<>((String)data);
     }
 
     public DataFrame get(String label) {
