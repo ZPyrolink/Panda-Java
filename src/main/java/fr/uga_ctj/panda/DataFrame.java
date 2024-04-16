@@ -209,8 +209,21 @@ public class DataFrame {
 
     //region stats
 
-    public Map<String, Float> avg() {
-        throw new RuntimeException();
+    public Map<String, Double> mean() {
+        Map<String,Double> output = new HashMap<>();
+        for(String key : Data.keySet())
+        {
+            double tmp=0;
+            if(!(Data.get(key)[0].getValue() instanceof Long || Data.get(key)[0].getValue() instanceof String))
+            {
+                for (int j = 0; j < Data.get(key).length; j++) {
+                    tmp += (double) Data.get(key)[j].getValue();
+                }
+                tmp/=Data.get(key).length;
+                output.put(key,tmp);
+            }
+        }
+        return output;
     }
 
     public Map<String, Obj> min() {
