@@ -3,6 +3,7 @@ package fr.uga_ctj.panda;
 import lombok.Getter;
 
 import java.io.FileInputStream;
+import java.util.HashMap;
 import java.util.Map;
 
 public class DataFrame {
@@ -11,7 +12,7 @@ public class DataFrame {
         private T value;
     }
 
-    private Map<String, Obj[]> map;
+    private Map<String, Obj[]> Data;
 
     //region Ctor
 
@@ -56,8 +57,21 @@ public class DataFrame {
 
     //region stats
 
-    public Map<String, Float> avg() {
-        throw new RuntimeException();
+    public Map<String, Double> mean() {
+        Map<String,Double> output = new HashMap<>();
+        for(String key : Data.keySet())
+        {
+            double tmp=0;
+            if(!(Data.get(key)[0].getValue() instanceof Long || Data.get(key)[0].getValue() instanceof String))
+            {
+                for (int j = 0; j < Data.get(key).length; j++) {
+                    tmp += (double) Data.get(key)[j].getValue();
+                }
+                tmp/=Data.get(key).length;
+                output.put(key,tmp);
+            }
+        }
+        return output;
     }
 
     public Map<String, Obj> min() {
