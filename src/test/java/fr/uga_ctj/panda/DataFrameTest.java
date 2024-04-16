@@ -1,10 +1,13 @@
 package fr.uga_ctj.panda;
 
 import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -14,18 +17,19 @@ class DataFrameTest {
 
     private String[] labels;
     private Object[][] data;
+    private Object[][] values;
 
     @BeforeEach
     void initTest() {
         data = new Object[][] {
-                new Object[] { 0, 0f, 'a' },
-                new Object[] { 1, 1f, 'b' },
-                new Object[] { 2, 2f, 'c' },
-                new Object[] { 3, 3f, 'd' },
+                new Object[] { 0, 0d, 0f, 0L, (short) 0/*, (byte) 0*/, 'a' },
+                new Object[] { 1, 1d, 1f, 1L, (short) 1/*, (byte) 1*/, 'b' },
+                new Object[] { 2, 2d, 2f, 2L, (short) 2/*, (byte) 2*/, 'c' },
+                new Object[] { 3, 3d, 3f, 3L, (short) 3/*, (byte) 3*/, 'd' },
         };
 
-        labels = new String[] { "l1", "l2", "l3" };
-        Object[][] values = new Object[labels.length][data.length];
+        labels = new String[] { "l1", "l2", "l3", "l4", "l5", "l6"/*, "l7"*/ };
+        values = new Object[labels.length][data.length];
 
         for (int i = 0; i < data.length; i++)
             for (int j = 0; j < labels.length; j++)
@@ -82,6 +86,33 @@ class DataFrameTest {
             values[0][i] = data[i][l];
 
         DataFrame expected = new DataFrame(new String[] { label }, values);
+
+        assertEquals(expected, result);
+    }
+
+    @Test
+    void testMin() {
+        Map<String, Double> expected = new HashMap<>();
+
+        for (int l = 0; l < labels.length; l++) {
+            if (data[0][l] instanceof String || data[0][l] instanceof Character)
+                continue;
+
+            if (values[l][0] instanceof Byte)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Byte[]::new)).min(Byte::compareTo).get()));
+            else if (values[l][0] instanceof Short)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Short[]::new)).min(Short::compareTo).get()));
+            else if (values[l][0] instanceof Integer)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Integer[]::new)).min(Integer::compareTo).get()));
+            else if (values[l][0] instanceof Long)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Long[]::new)).min(Long::compareTo).get()));
+            else if (values[l][0] instanceof Float)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Float[]::new)).min(Float::compareTo).get()));
+            else if (values[l][0] instanceof Double)
+                expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Double[]::new)).min(Double::compareTo).get()));
+        }
+
+        Map<String, Double> result = frame.min();
 
         assertEquals(expected, result);
     }
