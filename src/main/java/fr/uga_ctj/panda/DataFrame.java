@@ -5,6 +5,7 @@ import lombok.Getter;
 import java.io.*;
 import java.util.Map;
 import java.util.HashMap;
+import java.util.Set;
 
 public class DataFrame {
     static class Obj<T> {
@@ -16,12 +17,12 @@ public class DataFrame {
         }
     }
 
-    private Map<String, Obj[]> Data;
+    private Map<String, Obj[]> map;
 
     //region Ctor
     //x and y are switch
     public DataFrame(String[] label, Object[][] values) {
-        Data = new HashMap<>();
+        map = new HashMap<>();
         for(int i=0;i<label.length;i++)
         {
             Obj[] currentCol = new Obj[values[i].length];
@@ -65,7 +66,7 @@ public class DataFrame {
                 
                 currentCol[j]=obj;
             }
-            Data.put(label[i],currentCol);
+            map.put(label[i],currentCol);
         }
             
     }
@@ -88,7 +89,7 @@ public class DataFrame {
             }
             else
             {
-                Data = new HashMap<>();
+                map = new HashMap<>();
                 //first line is the list of row names
                 String[] Row = line.split(",");
                 String[] Columns;
@@ -102,7 +103,7 @@ public class DataFrame {
                     for(int i =0;i< Columns.length;i++) {
                         DataConverted[i]=Convert(Columns[i]);
                     }
-                    Data.put(Row[k],DataConverted);
+                    map.put(Row[k],DataConverted);
                     k++;
                 };
             }
@@ -171,7 +172,25 @@ public class DataFrame {
 
     @Override
     public String toString() {
-        throw new RuntimeException();
+        String out = new String();
+        Set<String> keys = this.map.keySet();
+        out += "\t";
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = 0; i <this.length(); i++){
+            out += "\t";
+            for(String key : keys){
+                out += this.map.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
     }
 
     public String toString(int nb) {
@@ -200,6 +219,6 @@ public class DataFrame {
 
     public int length() {
 
-        return this.Data.get(this.Data.keySet().iterator().next()).length;
+        return this.map.get(this.map.keySet().iterator().next()).length;
     }
 }
