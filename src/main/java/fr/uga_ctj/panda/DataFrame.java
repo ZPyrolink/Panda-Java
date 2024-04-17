@@ -27,7 +27,7 @@ public class DataFrame {
         }
     }
 
-    private Map<String, Obj[]> map;
+    private Map<String, Obj[]> Data;
 
     //region Ctor
   
@@ -94,7 +94,7 @@ public class DataFrame {
             }
             else
             {
-                map = new HashMap<>();
+                Data = new HashMap<>();
                 //first line is the list of row names
                 String[] Row = line.split(",");
                 String[] Columns;
@@ -224,7 +224,7 @@ public class DataFrame {
     @Override
     public String toString() {
         String out = "\t";
-        Set<String> keys = this.map.keySet();
+        Set<String> keys = this.Data.keySet();
 
 
         for (String key : keys){
@@ -235,7 +235,7 @@ public class DataFrame {
         for(int i = 0; i <this.length(); i++){
             out += "\t";
             for(String key : keys){
-                out += this.map.get(key)[i].getValue()+" \t";
+                out += this.Data.get(key)[i].getValue()+" \t";
 
             }
             out += "\n";
@@ -246,7 +246,7 @@ public class DataFrame {
 
     public String firstToString(int nb) {
         String out= "\t";;
-        Set<String> keys = this.map.keySet();
+        Set<String> keys = this.Data.keySet();
 
 
         for (String key : keys){
@@ -257,7 +257,7 @@ public class DataFrame {
         for(int i = 0; i <nb; i++){
             out += "\t";
             for(String key : keys){
-                out += this.map.get(key)[i].getValue()+" \t";
+                out += this.Data.get(key)[i].getValue()+" \t";
 
             }
             out += "\n";
@@ -268,7 +268,7 @@ public class DataFrame {
 
     public String lastToString(int nb) {
         String out= "\t";;
-        Set<String> keys = this.map.keySet();
+        Set<String> keys = this.Data.keySet();
 
 
         for (String key : keys){
@@ -279,7 +279,7 @@ public class DataFrame {
         for(int i = this.length()-1; i >=this.length()-nb; i--){
             out += "\t";
             for(String key : keys){
-                out += this.map.get(key)[i].getValue()+" \t";
+                out += this.Data.get(key)[i].getValue()+" \t";
 
             }
             out += "\n";
