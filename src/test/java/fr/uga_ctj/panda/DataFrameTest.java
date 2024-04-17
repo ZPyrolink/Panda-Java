@@ -19,9 +19,9 @@ class DataFrameTest {
     void initTest() {
         data = new Object[][] {
                 new Object[] { 0, 0f, 'a' },
-                new Object[] { 1, 1f, 'b' },
-                new Object[] { 2, 2f, 'c' },
-                new Object[] { 3, 3f, 'd' },
+                new Object[] { 1, 1.5f, 'b' },
+                new Object[] { 2, 2.9f, 'c' },
+                new Object[] { 3, 3.2f, 'd' },
         };
 
         labels = new String[] { "l1", "l2", "l3" };
@@ -56,6 +56,12 @@ class DataFrameTest {
         DataFrame expected = new DataFrame(labels, values);
 
         assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = { 0,1 })
+    void testMean(int axis) {
+
     }
 
     void testOOBIntGet(int i, String msg) {

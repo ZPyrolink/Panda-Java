@@ -209,21 +209,72 @@ public class DataFrame {
 
     //region stats
 
-    public Map<String, Double> mean() {
+    public Map<String, Double> mean(int axis) {
         Map<String,Double> output = new HashMap<>();
-        for(String key : Data.keySet())
-        {
-            double tmp=0;
-            if(!(Data.get(key)[0].getValue() instanceof Long || Data.get(key)[0].getValue() instanceof String))
-            {
-                for (int j = 0; j < Data.get(key).length; j++) {
-                    tmp += (double) Data.get(key)[j].getValue();
+        if(axis==0) {
+            for (String key : Data.keySet()) {
+                double tmp = 0;
+                if (!(Data.get(key)[0].getValue() instanceof String || Data.get(key)[0].getValue() instanceof Character)) {
+                    if(Data.get(key)[0].getValue() instanceof Long)
+                    {
+                        for (int j = 0; j < Data.get(key).length; j++) {
+                            tmp += Double.valueOf((int)Data.get(key)[j].getValue());
+                        }
+                    }
+                    else {
+                        for (int j = 0; j < Data.get(key).length; j++) {
+                            tmp += (double) Data.get(key)[j].getValue();
+                        }
+                    }
+                    tmp /= Data.get(key).length;
+                    output.put(key, tmp);
                 }
-                tmp/=Data.get(key).length;
-                output.put(key,tmp);
             }
         }
+        else
+        {
+           int width = Data.keySet().size();
+           int[] colSize = new int[width];
+            String[]cols =(String[])Data.keySet().toArray();
+            //get the size of all columns
+            int height=0;
+           for(int i=0;i<width;i++)
+           {
+               colSize[i]=Data.get(cols[i]).length;
+               if(colSize[i]>height)
+                   height=colSize[i];
+           }
+
+           for(int i=0;i<height;i++)
+           {
+               double tmp=0;
+               for(int j=0;j<width;j++)
+               {
+                   Obj value=Data.get(cols[j])[i];
+                   if(IsArithmetics(value))
+                   {
+                       if(value.getValue() instanceof Integer)
+                       {
+                           tmp += Double.valueOf((int)value.getValue());
+                       }
+                       else
+                       {
+                           tmp += (double) value.getValue();
+                       }
+                   }
+               }
+               tmp/=width;
+               output.put(Integer.toString(i),tmp);
+           }
+        }
         return output;
+    }
+
+    private boolean IsArithmetics(Obj data)
+    {
+        if(data.getValue() instanceof Integer || data.getValue() instanceof Float || data.getValue() instanceof Double || data.getValue() instanceof Long)
+            return true;
+        return false;
     }
 
     public Map<String, Obj> min() {
