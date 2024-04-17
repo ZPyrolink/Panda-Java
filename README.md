@@ -1,7 +1,7 @@
 # Implémentation Java des pandas
 | |                                                                                              |
 | --- |----------------------------------------------------------------------------------------------|
-| Building & testing | [![CI - Test](https://github.com/ZPyrolink/Panda-Java/.github/workflows/maven.yml/badge.svg)] |
+| Building & testing | [![CI - Test](https://github.com/ZPyrolink/Panda-Java/.github/workflows/maven.yml)] |
 
 
 
