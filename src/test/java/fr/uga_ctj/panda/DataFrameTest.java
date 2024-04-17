@@ -40,4 +40,19 @@ public class DataFrameTest {
     void testToString(){
         System.out.println(frame.toString());
     }
+
+
+    @Test
+    void testfirstToStringint(){
+        for(int i =1; i<=frame.length();i++){
+            System.out.println(frame.firstToString(i));
+        }
+    }
+
+    @Test
+    void testlasttToStringint(){
+        for(int i =1; i<=frame.length();i++){
+            System.out.println(frame.lastToString(i));
+        }
+    }
 }

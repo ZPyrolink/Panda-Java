@@ -172,9 +172,9 @@ public class DataFrame {
 
     @Override
     public String toString() {
-        String out = new String();
+        String out = "\t";
         Set<String> keys = this.map.keySet();
-        out += "\t";
+
 
         for (String key : keys){
             out += "["+key+"]\t";
@@ -193,8 +193,48 @@ public class DataFrame {
         return out;
     }
 
-    public String toString(int nb) {
-        throw new RuntimeException();
+    public String firstToString(int nb) {
+        String out= "\t";;
+        Set<String> keys = this.map.keySet();
+
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = 0; i <nb; i++){
+            out += "\t";
+            for(String key : keys){
+                out += this.map.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
+    }
+
+    public String lastToString(int nb) {
+        String out= "\t";;
+        Set<String> keys = this.map.keySet();
+
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = this.length()-1; i >=this.length()-nb; i--){
+            out += "\t";
+            for(String key : keys){
+                out += this.map.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
     }
 
     public String toString(int min, int max) {
