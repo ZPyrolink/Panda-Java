@@ -33,6 +33,9 @@ jobs:
   coverages:
     runs-on: ubuntu-latest
     steps:
+    # Vérification usuelles
+      - name: Checkout repository
+        uses: actions/checkout@v4
       - name: Run tests with Maven and generate coverage report
         run: mvn clean test jacoco:report
 
