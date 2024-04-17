@@ -2,9 +2,9 @@ package fr.uga_ctj.panda;
 
 import lombok.Getter;
 
+import java.io.FileInputStream;
+import java.util.*;
 import java.io.*;
-import java.util.Map;
-import java.util.HashMap;
 
 public class DataFrame {
     static class Obj<T> {
@@ -213,6 +213,7 @@ public class DataFrame {
     }
 
     public int length() {
-        throw new RuntimeException();
+
+        return this.Data.get(this.Data.keySet().iterator().next()).length;
     }
 }
