@@ -80,8 +80,7 @@ public class DataFrame {
     public DataFrame(File file) {
         String name = file.getName();
         int length = name.length();
-        String[] split = name.split(".");
-
+        String[] split = name.split("\\.");
         //check if file has a format of .csv
         if(split.length==0 || split[1].compareTo("csv")!=0)
         {
@@ -147,11 +146,7 @@ public class DataFrame {
         } catch (NumberFormatException e) {
         }
 
-        //it's a Float
-        try {
-            return new Obj<>((Float) Float.parseFloat(data));
-        } catch (NumberFormatException e) {
-        }
+
 
         //it's a Long
         try {
@@ -159,12 +154,20 @@ public class DataFrame {
         } catch (NumberFormatException e) {
         }
 
-        //it's a double
+        //it's a Double or Float
         try {
-            return new Obj<>((Double) Double.parseDouble(data));
+            Obj<Double> tmp=new Obj<Double>((Double) Double.parseDouble(data));
+            int nbdigit=data.split("\\.")[1].length();
+            //if(tmp.getValue()<Float.MAX_VALUE && tmp.getValue()>Float.MIN_VALUE && nbdigit<=7)
+            {
+            //    return new Obj<Float>((float) Float.parseFloat(data));
+            }
+            //else
+            {
+                return tmp;
+            }
         } catch (NumberFormatException e) {
         }
-
         //string or char
         return new Obj<>((String) data);
     }

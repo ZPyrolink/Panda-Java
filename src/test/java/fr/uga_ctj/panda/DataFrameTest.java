@@ -5,6 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
+import java.io.File;
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
@@ -19,11 +20,11 @@ class DataFrameTest {
 
     @BeforeEach
     void initTest() {
-        data = new Object[][] {
-                new Object[] { 0, 0d, 0f, 0L, (short) 0/*, (byte) 0*/, 'a' },
-                new Object[] { 1, 1d, 1f, 1L, (short) 1/*, (byte) 1*/, 'b' },
-                new Object[] { 2, 2d, 2f, 2L, (short) 2/*, (byte) 2*/, 'c' },
-                new Object[] { 3, 3d, 3f, 3L, (short) 3/*, (byte) 3*/, 'd' },
+        data = new Object[][] { //0.4598915,4.4598915,5.4598915,6.4598915
+                new Object[] { 0, 0.003006459891, 0.4598915f, 9_000_000_123_899L, (short) 259/*, (byte) 0*/, 'a' },
+                new Object[] { 1, 4.003006459891, 4.4598915f, 100_000_000_123_899L, (short) 260/*, (byte) 1*/, 'b' },
+                new Object[] { 2, 2.003006459891, 5.4598915f, 11_000_000_123_899L, (short) 261/*, (byte) 2*/, 'c' },
+                new Object[] { 3, 9.003006459891, 6.4598915f, 12_000_000_123_899L, (short) 262/*, (byte) 3*/, 'd' },
         };
 
         labels = new String[] { "l1", "l2", "l3", "l4", "l5", "l6"/*, "l7"*/ };
@@ -91,6 +92,8 @@ class DataFrameTest {
 
         assertEquals(expected, result);
     }
+
+
 
     @ParameterizedTest
     @ValueSource(ints = { 0, 1 })
@@ -212,7 +215,17 @@ class DataFrameTest {
         IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.min(axis));
         assertEquals("Axis must be 0 or 1", e.getMessage());
     }
+    @ParameterizedTest
+    @ValueSource(strings = { "./TestFiles/test.csv" })
+    void testCSV(String url) {
+        File file = new File(url);
 
+        DataFrame frame= new DataFrame(file);
+
+        DataFrame expected = new DataFrame(labels, values);
+
+        assertEquals(expected,frame);
+    }
     @Test
     void testMax() {
         Map<String, Double> expected = new HashMap<>();
