@@ -223,11 +223,69 @@ public class DataFrame {
 
     @Override
     public String toString() {
-        throw new RuntimeException();
+        String out = "\t";
+        Set<String> keys = this.Data.keySet();
+
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = 0; i <this.length(); i++){
+            out += "\t";
+            for(String key : keys){
+                out += this.Data.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
     }
 
-    public String toString(int nb) {
-        throw new RuntimeException();
+    public String firstToString(int nb) {
+        String out= "\t";;
+        Set<String> keys = this.Data.keySet();
+
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = 0; i <nb; i++){
+            out += "\t";
+            for(String key : keys){
+                out += this.Data.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
+    }
+
+    public String lastToString(int nb) {
+        String out= "\t";;
+        Set<String> keys = this.Data.keySet();
+
+
+        for (String key : keys){
+            out += "["+key+"]\t";
+
+        }
+        out += "\n";
+        for(int i = this.length()-1; i >=this.length()-nb; i--){
+            out += "\t";
+            for(String key : keys){
+                out += this.Data.get(key)[i].getValue()+" \t";
+
+            }
+            out += "\n";
+
+        }
+        return out;
     }
 
     public String toString(int min, int max) {
