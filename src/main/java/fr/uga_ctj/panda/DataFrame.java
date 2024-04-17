@@ -199,6 +199,7 @@ public class DataFrame {
     }
 
     public int length() {
-        throw new RuntimeException();
+
+        return this.Data.get(this.Data.keySet().iterator().next()).length;
     }
 }
