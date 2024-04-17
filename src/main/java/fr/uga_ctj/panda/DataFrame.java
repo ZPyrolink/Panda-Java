@@ -211,11 +211,11 @@ public class DataFrame {
 
     private double numeric2double(Object obj) {
         return switch (obj) {
-            case Byte b -> (double) b;
-            case Short s -> (double) s;
-            case Integer i -> (double) i;
-            case Long l -> (double) l;
-            case Float f -> (double) f;
+            case Byte b -> b;
+            case Short s -> s;
+            case Integer i -> i;
+            case Long l -> l;
+            case Float f -> f;
             case Double d -> d;
             case null, default -> throw new RuntimeException("Never happen");
         };
