@@ -4,6 +4,7 @@ import lombok.Getter;
 
 import java.io.FileInputStream;
 import java.util.Map;
+import java.util.Set;
 
 public class DataFrame {
     static class Obj<T> {
@@ -41,19 +42,26 @@ public class DataFrame {
 
        @Override
     public String toString() {
-        Set<String> keys = this.Data.keySet();
-        System.out.print("      ");
+        String out = new String();
+        Set<String> keys = this.map.keySet();
+        out += "      ";
+
         for (String key : keys){
-            System.out.print("["+key+"] - ");
+            out += "["+key+"] - ";
+
         }
-        System.out.println("");
-        System.out.print("      ");
+        out += "\n";
+        out += "      ";
+
         for(int i = 0; i <this.length(); i++){
             for(String key : keys){
-                System.out.print(" "+this.Data.get(key)[i]+"  - ");
+                out += " "+this.map.get(key)[i]+"  - ";
+
             }
-            System.out.println("");
+            out += "\n";
+
         }
+        return out;
     }
 
     public String toString(int nb) {
