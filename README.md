@@ -1,13 +1,11 @@
 # Implémentation Java des pandas
-| |                                                                                              |
-| --- |----------------------------------------------------------------------------------------------|
-| Building & testing | [![CI - Test](https://img.shields.io/badge/Java-ED8B00?style=for-the-badge&logo=openjdk&logoColor=white)] |
+<a href="https://github.com/users/ZPyrolink/projects/2" alt="Tests"><img src="https://img.shields.io/badge/Gérer%20avec-GitHubProject-blue.svg"/> </a>
 
 
 
 ## Description
 
-**pandas** est un paquet Python qui fournit des données rapides, flexibles et expressives
+**Pandas** est un paquet Python qui fournit des données rapides, flexibles et expressives
 des structures conçues pour rendre le travail avec des données "relationnelles" ou "étiquetées"
 facile et intuitif. Il vise à être l’élément de base de haut niveau pour
 faire de l’analyse de données pratique. Notre travail est donc de créer une implémentation Java de ce paquet Python.
