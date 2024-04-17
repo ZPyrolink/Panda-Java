@@ -72,6 +72,47 @@ class DataFrameTest {
         assertEquals(expected, result);
     }
 
+    @ParameterizedTest
+    @ValueSource(ints = { 0,1 })
+    void testMean(int axis) {
+        Map<String, Double> expected = new HashMap<>();
+    if(axis==0) {
+        for (int l = 0; l < labels.length; l++) {
+            if (data[0][l] instanceof String || data[0][l] instanceof Character)
+                continue;
+
+            if (values[l][0] instanceof Byte)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (byte) b).average().getAsDouble());
+            else if (values[l][0] instanceof Short)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (short) b).average().getAsDouble());
+            else if (values[l][0] instanceof Integer)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (int) b).average().getAsDouble());
+            else if (values[l][0] instanceof Long)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (long) b).average().getAsDouble());
+            else if (values[l][0] instanceof Float)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (float) b).average().getAsDouble());
+            else if (values[l][0] instanceof Double)
+                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (double) b).average().getAsDouble());
+        }
+    }
+    else
+    {
+        for (int d = 0; d < data.length; d++) {
+            List<Double> dd = new ArrayList<>();
+            for (int l = 0; l < labels.length; l++) {
+                if (data[d][l] instanceof String || data[d][l] instanceof Character)
+                    continue;
+
+                dd.add(frame.numeric2double(data[d][l]));
+            }
+            expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+        }
+    }
+        Map<String, Double> result = frame.mean(axis);
+
+        assertEquals(expected, result);
+    }
+
     void testOOBIntGet(int i, String msg) {
         IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.get(i));
         assertEquals(msg, e.getMessage());
