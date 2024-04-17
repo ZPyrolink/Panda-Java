@@ -209,6 +209,18 @@ public class DataFrame {
 
     //region stats
 
+    private double numeric2double(Object obj) {
+        return switch (obj) {
+            case Byte b -> Double.valueOf(b);
+            case Short s -> Double.valueOf(s);
+            case Integer i -> Double.valueOf(i);
+            case Long l -> Double.valueOf(l);
+            case Float f -> Double.valueOf(f);
+            case Double d -> d;
+            case null, default -> throw new RuntimeException("Never happen");
+        };
+    }
+
     public Map<String, Double> mean(int axis) {
         Map<String,Double> output = new HashMap<>();
         if(axis==0) {
@@ -277,12 +289,54 @@ public class DataFrame {
         return false;
     }
 
-    public Map<String, Obj> min() {
-        throw new RuntimeException();
+    public Map<String, Double> min() {
+        Map<String, Double> result = new HashMap<>();
+
+        for (String label : Data.keySet()) {
+            Obj[] tmp = Data.get(label);
+
+            if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
+                continue;
+
+            Obj<Double>[] objs = (Obj<Double>[]) tmp;
+            Double currentMin = Double.MAX_VALUE;
+
+            for (Obj obj : objs) {
+                double d = numeric2double(obj.getValue());
+
+                if (d < currentMin)
+                    currentMin = d;
+            }
+
+            result.put(label, currentMin);
+        }
+
+        return result;
     }
 
-    public Map<String, Float> max() {
-        throw new RuntimeException();
+    public Map<String, Double> max() {
+        Map<String, Double> result = new HashMap<>();
+
+        for (String label : Data.keySet()) {
+            Obj[] tmp = Data.get(label);
+
+            if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
+                continue;
+
+            Obj<Double>[] objs = (Obj<Double>[]) tmp;
+            double currentMax = Double.MIN_VALUE;
+
+            for (Obj obj : objs) {
+                double d = numeric2double(obj.getValue());
+
+                if (d > currentMax)
+                    currentMax = d;
+            }
+
+            result.put(label, currentMax);
+        }
+
+        return result;
     }
 
     public int length() {
