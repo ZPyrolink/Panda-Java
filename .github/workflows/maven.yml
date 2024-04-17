@@ -72,7 +72,7 @@ jobs:
 
   coverages:
     runs-on: ubuntu-latest
-    needs: run-tests #Action nécessaire à exécuter avant
+    needs: run-test #Action nécessaire à exécuter avant
     steps:
     # Vérification usuelles
       - name: Checkout repository
