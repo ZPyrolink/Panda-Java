@@ -19,6 +19,7 @@ public class DataFrame {
     private Map<String, Obj[]> Data;
 
     //region Ctor
+  
     //x and y are switch
     public DataFrame(String[] label, Object[][] values) {
         Data = new HashMap<>();
@@ -71,7 +72,6 @@ public class DataFrame {
             }
             Data.put(label[i],currentCol);
         }
-            
     }
 
     public DataFrame(File file) {
