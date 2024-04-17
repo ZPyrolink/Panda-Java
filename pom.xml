@@ -9,23 +9,98 @@
     <version>1.0-SNAPSHOT</version>
     <build>
         <plugins>
+        <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>1.2.1</version>
+            <executions>
+                <execution>
+                    <goals>
+                        <goal>java</goal>
+                    </goals>
+                </execution>
+            </executions>
+            <configuration>
+                <mainClass>fr.uga_ctj.panda.Main</mainClass>
+            </configuration>
+        </plugin>
             <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>1.2.1</version>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.12</version>
                 <executions>
                     <execution>
                         <goals>
-                            <goal>java</goal>
+                            <goal>prepare-agent</goal>
                         </goals>
                     </execution>
+
+                    <execution>
+                        <id>jacoco-report</id>
+                        <phase>test</phase>
+                        <!-- On lui dit de faire un rapport dans la phase de tests -->
+                        <goals>
+                            <goal>report</goal>
+                        </goals>
+                    </execution>
+
+                    <execution>
+                        <id>jacoco-check</id>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                        <configuration>
+                            <rules>
+                                <rule>
+                                    <element>PACKAGE</element>
+                                    <limits>
+                                        <limit>
+                                            <counter>LINE</counter>
+                                            <value>COVEREDRATIO</value>
+                                            <!-- Seuil minimal de couverture de code -->
+                                            <minimum>0.8</minimum>
+                                        </limit>
+                                    </limits>
+                                </rule>
+                            </rules>
+                            <excludes>
+                                <exclude>**/panda/Main.*</exclude>
+                            </excludes>
+                        </configuration>
+                    </execution>
                 </executions>
-                <configuration>
-                    <mainClass>fr.uga_ctj.panda.Main</mainClass>
-                </configuration>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-shade-plugin</artifactId>
+                <version>3.4.1</version>
+                <executions>
+                    <execution>
+                        <phase>package</phase>
+                        <goals>
+                            <goal>shade</goal>
+                        </goals>
+                        <configuration>
+                            <transformers>
+                                <transformer implementation="org.apache.maven.plugins.shade.resource.ManifestResourceTransformer">
+                                    <mainClass>org.example.Main</mainClass>
+                                </transformer>
+                            </transformers>
+                        </configuration>
+                    </execution>
+                </executions>
             </plugin>
         </plugins>
     </build>
+
+    <distributionManagement>
+        <repository>
+            <!-- L'ID sert à repérer de quel gestionnaire de package on parle -->
+            <id>github</id>
+            <name>GitHub ZPyrolink Apache Maven Packages</name>
+            <url>https://maven.pkg.github.com/ZPyrolink/Panda-Java</url>
+        </repository>
+    </distributionManagement>
     <properties>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
