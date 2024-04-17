@@ -5,9 +5,7 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
@@ -36,6 +34,18 @@ class DataFrameTest {
                 values[j][i] = data[i][j];
 
         frame = new DataFrame(labels, values);
+    }
+
+    private double numeric2double(Object obj) {
+        return switch (obj) {
+            case Byte b -> b;
+            case Short s -> s;
+            case Integer i -> i;
+            case Long l -> l;
+            case Float f -> f;
+            case Double d -> d;
+            case null, default -> throw new RuntimeException("Never happen");
+        };
     }
 
     @ParameterizedTest
@@ -112,9 +122,36 @@ class DataFrameTest {
                 expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Double[]::new)).min(Double::compareTo).get()));
         }
 
-        Map<String, Double> result = frame.min();
+        Map<String, Double> result = frame.min(0);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    void testMin1() {
+        Map<String, Double> expected = new HashMap<>();
+
+        for (int d = 0; d < data.length; d++) {
+            List<Double> dd = new ArrayList<>();
+            for (int l = 0; l < labels.length; l++) {
+                if (data[d][l] instanceof String || data[d][l] instanceof Character)
+                    continue;
+
+                dd.add(numeric2double(data[d][l]));
+            }
+            expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).min().getAsDouble());
+        }
+
+        Map<String, Double> result = frame.min(1);
+
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 3})
+    void testMinOthers(int axis) {
+        IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.min(axis));
+        assertEquals("Axis must be 0 or 1", e.getMessage());
     }
 
     @Test
@@ -139,8 +176,35 @@ class DataFrameTest {
                 expected.put(labels[l], Double.valueOf(Arrays.stream(Arrays.stream(values[l]).toArray(Double[]::new)).max(Double::compareTo).get()));
         }
 
-        Map<String, Double> result = frame.max();
+        Map<String, Double> result = frame.max(0);
 
         assertEquals(expected, result);
+    }
+
+    @Test
+    void testMax1() {
+        Map<String, Double> expected = new HashMap<>();
+
+        for (int d = 0; d < data.length; d++) {
+            List<Double> dd = new ArrayList<>();
+            for (int l = 0; l < labels.length; l++) {
+                if (data[d][l] instanceof String || data[d][l] instanceof Character)
+                    continue;
+
+                dd.add(numeric2double(data[d][l]));
+            }
+            expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).max().getAsDouble());
+        }
+
+        Map<String, Double> result = frame.max(1);
+
+        assertEquals(expected, result);
+    }
+
+    @ParameterizedTest
+    @ValueSource(ints = {-1, 3})
+    void testMaxOthers(int axis) {
+        IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.max(axis));
+        assertEquals("Axis must be 0 or 1", e.getMessage());
     }
 }
