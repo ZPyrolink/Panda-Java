@@ -47,12 +47,11 @@ jobs:
         run: mvn clean test
         continue-on-error: true
         
-      - run: touch /.github/workflow/test-report
       - name: Upload test report
         uses: actions/upload-artifact@v4
         with:
           name: test-report
-          path: /.github/workflows/
+          path: target/surefire-reports/
 
       - name: Check if tests passed
         if: ${{ failure() }}
@@ -77,12 +76,12 @@ jobs:
         uses: actions/download-artifact@v4.1.4
         with:
           name: test-report
-          path: /.github/workflows/
+          path: target/surefire-reports/
 
       
       - name: Run tests with Maven and generate coverage report
         run: mvn clean test jacoco:report
-      - run: rm /.github/workflows/test-report
+      
       - name: Check code coverage
         id: check-coverage
         run: mvn clean verify jacoco:report || echo "::error line=1::Coverage checks have not been met" && exit 1
