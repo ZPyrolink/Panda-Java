@@ -1,13 +1,14 @@
 package fr.uga_ctj.panda;
 
-import fr.uga_ctj.panda.DataFrame;
-
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.ValueSource;
 
-import java.util.Arrays;
+import java.util.*;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrowsExactly;
 
 class DataFrameTest {
     private DataFrame frame;
@@ -36,21 +37,21 @@ class DataFrameTest {
     }
 
     @Test
-    void testToString(){
+    void testToString() {
         System.out.println(frame.toString());
     }
 
 
     @Test
-    void testfirstToStringint(){
-        for(int i =1; i<=frame.length();i++){
+    void testfirstToStringint() {
+        for (int i = 1; i <= frame.length(); i++) {
             System.out.println(frame.firstToString(i));
         }
     }
 
     @Test
-    void testlasttToStringint(){
-        for(int i =1; i<=frame.length();i++){
+    void testlasttToStringint() {
+        for (int i = 1; i <= frame.length(); i++) {
             System.out.println(frame.lastToString(i));
         }
     }
@@ -92,41 +93,39 @@ class DataFrameTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = { 0,1 })
+    @ValueSource(ints = { 0, 1 })
     void testMean(int axis) {
         Map<String, Double> expected = new HashMap<>();
-    if(axis==0) {
-        for (int l = 0; l < labels.length; l++) {
-            if (data[0][l] instanceof String || data[0][l] instanceof Character)
-                continue;
-
-            if (values[l][0] instanceof Byte)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (byte) b).average().getAsDouble());
-            else if (values[l][0] instanceof Short)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (short) b).average().getAsDouble());
-            else if (values[l][0] instanceof Integer)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (int) b).average().getAsDouble());
-            else if (values[l][0] instanceof Long)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (long) b).average().getAsDouble());
-            else if (values[l][0] instanceof Float)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (float) b).average().getAsDouble());
-            else if (values[l][0] instanceof Double)
-                expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (double) b).average().getAsDouble());
-        }
-    }
-    else
-    {
-        for (int d = 0; d < data.length; d++) {
-            List<Double> dd = new ArrayList<>();
+        if (axis == 0) {
             for (int l = 0; l < labels.length; l++) {
-                if (data[d][l] instanceof String || data[d][l] instanceof Character)
+                if (data[0][l] instanceof String || data[0][l] instanceof Character)
                     continue;
 
-                dd.add(frame.numeric2double(data[d][l]));
+                if (values[l][0] instanceof Byte)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (byte) b).average().getAsDouble());
+                else if (values[l][0] instanceof Short)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (short) b).average().getAsDouble());
+                else if (values[l][0] instanceof Integer)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (int) b).average().getAsDouble());
+                else if (values[l][0] instanceof Long)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (long) b).average().getAsDouble());
+                else if (values[l][0] instanceof Float)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (float) b).average().getAsDouble());
+                else if (values[l][0] instanceof Double)
+                    expected.put(labels[l], Arrays.stream(values[l]).mapToDouble(b -> (double) (double) b).average().getAsDouble());
             }
-            expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+        } else {
+            for (int d = 0; d < data.length; d++) {
+                List<Double> dd = new ArrayList<>();
+                for (int l = 0; l < labels.length; l++) {
+                    if (data[d][l] instanceof String || data[d][l] instanceof Character)
+                        continue;
+
+                    dd.add(frame.numeric2double(data[d][l]));
+                }
+                expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).average().getAsDouble());
+            }
         }
-    }
         Map<String, Double> result = frame.mean(axis);
 
         assertEquals(expected, result);
@@ -208,7 +207,7 @@ class DataFrameTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-1, 3})
+    @ValueSource(ints = { -1, 3 })
     void testMinOthers(int axis) {
         IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.min(axis));
         assertEquals("Axis must be 0 or 1", e.getMessage());
@@ -262,7 +261,7 @@ class DataFrameTest {
     }
 
     @ParameterizedTest
-    @ValueSource(ints = {-1, 3})
+    @ValueSource(ints = { -1, 3 })
     void testMaxOthers(int axis) {
         IndexOutOfBoundsException e = assertThrowsExactly(IndexOutOfBoundsException.class, () -> frame.max(axis));
         assertEquals("Axis must be 0 or 1", e.getMessage());
