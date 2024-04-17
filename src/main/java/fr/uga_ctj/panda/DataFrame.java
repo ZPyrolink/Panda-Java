@@ -130,6 +130,17 @@ public class DataFrame {
     private Obj Convert(String data)
     //use to convert from a string to an object
     {
+        //it's a Byte
+        try
+        {
+            return new Obj<>((Byte)Byte.parseByte(data));
+        }catch (NumberFormatException e){}
+
+        //it's a short
+        try
+        {
+            return new Obj<>((Short)Short.parseShort(data));
+        }catch (NumberFormatException e){}
 
         //it's a Integer
         try
@@ -155,17 +166,10 @@ public class DataFrame {
             return new Obj<>((Double)Double.parseDouble(data));
         }catch (NumberFormatException e){}
 
-        //it's a short
-        try
-        {
-            return new Obj<>((Short)Short.parseShort(data));
-        }catch (NumberFormatException e){}
 
-        //it's a Byte
-        try
-        {
-            return new Obj<>((Byte)Byte.parseByte(data));
-        }catch (NumberFormatException e){}
+
+
+
 
         //string or char
         return new Obj<>((String)data);
