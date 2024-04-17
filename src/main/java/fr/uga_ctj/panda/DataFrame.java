@@ -58,6 +58,10 @@ public class DataFrame {
                 {
                     obj = new Obj<>((String) values[i][j]);
                 }
+                else if(values[i][0] instanceof Byte)
+                {
+                    obj = new Obj<>((Byte) values[i][j]);
+                }
                 else
                 {
                     throw new RuntimeException("Type not recognised from this list : Long, Float, Integer, Char, String, Short, Double");
@@ -155,6 +159,12 @@ public class DataFrame {
         try
         {
             return new Obj<>((Short)Short.parseShort(data));
+        }catch (NumberFormatException e){}
+
+        //it's a Byte
+        try
+        {
+            return new Obj<>((Byte)Byte.parseByte(data));
         }catch (NumberFormatException e){}
 
         //string or char
