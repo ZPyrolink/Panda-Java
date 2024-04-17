@@ -20,7 +20,24 @@ faire de l’analyse de données pratique. Notre travail est donc de créer une 
 - [Background](#background)
 
 ## Fonctionalités
+Les Dataframes sont des tableaux en deux dimensions où chaque colonne est identifiée par un label et chaque ligne par un index.
+Notre implémentation de notre dataframe est une map nos label servant de clé vers les colonnes et notre fonctions get() pouvant prendre un int en entré pour donner une ligne.
+Chaque colonne stocke des données d’un seul type. Cependant deux colonnes différentes peuvent stocker des types différents.
 
+**Création du Dataframe**
+
+- A partir d’un constructeur prenant en paramètre le contenu de chaque colonne sous forme d’une
+structure de données simple (par exemple un tableau).
+- A partir d’un constructeur prenant en paramètre le nom d’un fichier CSV 
+
+**Affichage d’un dataframe** : permet d'afficher les Dataframes. Il exites plusieurs vairantes de cette
+méthode.
+- affichage du dataframe en entier
+
+**Selection de sous-ensemble** : permet de créer un nouveau Dataframe à partir d'une selection
+d'un sous-ensemble d'un Dataframe.
+- sélection d'un sous-ensemble de lignes
+- sélection d'un sous-ensemble de colonnes
 
 ## Code source
 Le code source python est conserver sur Github à l'url:
