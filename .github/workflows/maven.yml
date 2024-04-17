@@ -66,6 +66,12 @@ jobs:
         run: mvn clean test
         continue-on-error: true
 
+      - name: Upload test report
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-report
+          path: target/surefire-reports/
+
       - name: Check if tests passed
         if: ${{ failure() }}
         run: echo "::error line=1::Test check failed" && exit 1
