@@ -2,8 +2,9 @@ package fr.uga_ctj.panda;
 
 import lombok.Getter;
 
-import java.io.*;
+import java.io.FileInputStream;
 import java.util.*;
+import java.io.*;
 
 public class DataFrame {
     static class Obj<T> {
@@ -29,13 +30,16 @@ public class DataFrame {
     private Map<String, Obj[]> Data;
 
     //region Ctor
+  
     //x and y are switch
     public DataFrame(String[] label, Object[][] values) {
         Data = new HashMap<>();
         for (int i = 0; i < label.length; i++) {
             Obj[] currentCol = new Obj[values[i].length];
-
-            for (int j = 0; j < values[i].length; j++) {
+   
+            for(int j=0;j<values[i].length;j++)
+            {
+                //checking all of those type to cast correctly (yes this list isn't exhaustive)
                 Obj obj;
                 if (values[i][0] instanceof Integer) {
                     obj = new Obj<>((Integer) values[i][j]);
@@ -45,19 +49,32 @@ public class DataFrame {
                     obj = new Obj<>((Float) values[i][j]);
                 } else if (values[i][0] instanceof Character) {
                     obj = new Obj<>((Character) values[i][j]);
-                } else if (values[i][0] instanceof Long) {
-                    obj = new Obj<>((Long) values[i][j]);
-                } else if (values[i][0] instanceof Short) {
-                    obj = new Obj<>((Short) values[i][j]);
-                } else {
-                    throw new RuntimeException();
+                }
+                else if(values[i][0] instanceof Long)
+                {
+                    obj = new Obj<>((Long) values[i][j]);    
+                }
+                else if(values[i][0] instanceof Short)
+                {
+                    obj = new Obj<>((Short) values[i][j]);    
+                }
+                else if(values[i][0] instanceof String)
+                {
+                    obj = new Obj<>((String) values[i][j]);
+                }
+                else if(values[i][0] instanceof Byte)
+                {
+                    obj = new Obj<>((Byte) values[i][j]);
+                }
+                else
+                {
+                    throw new RuntimeException("Type not recognised from this list : Long, Float, Integer, Char, String, Short, Double");
                 }
 
                 currentCol[j] = obj;
             }
             Data.put(label[i], currentCol);
         }
-
     }
 
     public DataFrame(File file) {
@@ -65,21 +82,28 @@ public class DataFrame {
         int length = name.length();
         String[] split = name.split(".");
 
-        if (split.length == 0 || split[1].compareTo("csv") != 0) {
-            throw new RuntimeException();
+        //check if file has a format of .csv
+        if(split.length==0 || split[1].compareTo("csv")!=0)
+        {
+            throw new RuntimeException("File isn't a .csv");
         }
         try (BufferedReader ReadFile = new BufferedReader(new InputStreamReader(new FileInputStream(file)));) {
             String line = ReadFile.readLine();
             if (line == null) {
                 System.out.println("File is empty");
-
-            } else {
+            }
+            else
+            {
                 Data = new HashMap<>();
+                //first line is the list of row names
                 String[] Row = line.split(",");
                 String[] Columns;
                 Obj[] DataConverted;
-                int k = 0;
-                while ((line = ReadFile.readLine()) != null) {
+              
+                int k=0;
+                while((line= ReadFile.readLine()) != null)
+                {
+                    //read column by column
                     Columns = line.split(",");
                     DataConverted = new Obj[Columns.length];
                     for (int i = 0; i < Columns.length; i++) {
@@ -103,8 +127,19 @@ public class DataFrame {
     //region selection
 
     private Obj Convert(String data)
-    //use to convert string to a object
+    //use to convert from a string to an object
     {
+        //it's a Byte
+        try
+        {
+            return new Obj<>((Byte)Byte.parseByte(data));
+        }catch (NumberFormatException e){}
+
+        //it's a short
+        try
+        {
+            return new Obj<>((Short)Short.parseShort(data));
+        }catch (NumberFormatException e){}
 
         //it's a Integer
         try {
@@ -127,12 +162,6 @@ public class DataFrame {
         //it's a double
         try {
             return new Obj<>((Double) Double.parseDouble(data));
-        } catch (NumberFormatException e) {
-        }
-
-        //it's a short
-        try {
-            return new Obj<>((Short) Short.parseShort(data));
         } catch (NumberFormatException e) {
         }
 
@@ -327,7 +356,6 @@ public class DataFrame {
     }
 
     public int length() {
-
         return this.Data.get(this.Data.keySet().iterator().next()).length;
     }
 
