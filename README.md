@@ -1,5 +1,7 @@
 # Implémentation Java des pandas
 <a href="https://github.com/users/ZPyrolink/projects/2" alt="Tests"><img src="https://img.shields.io/badge/Gérer%20avec-GitHubProject-blue.svg"/> </a>
+<a href="https://pandas.pydata.org/" alt="Tests"><img src="https://img.shields.io/badge/Source-Panda-purple.svg"/> </a>
+<a href=""><img src="https://img.shields.io/badge/Powered%20By-Java-ED8B00"/> </a>
 
 
 
