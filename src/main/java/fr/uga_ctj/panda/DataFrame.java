@@ -240,11 +240,11 @@ public class DataFrame {
 
     public double numeric2double(Object obj) {
         return switch (obj) {
-            case Byte b -> Double.valueOf(b);
-            case Short s -> Double.valueOf(s);
-            case Integer i -> Double.valueOf(i);
-            case Long l -> Double.valueOf(l);
-            case Float f -> Double.valueOf(f);
+            case Byte b -> b;
+            case Short s -> s;
+            case Integer i -> i;
+            case Long l -> l;
+            case Float f -> f;
             case Double d -> d;
             case null, default -> throw new RuntimeException("Never happen");
         };
@@ -305,51 +305,95 @@ public class DataFrame {
         return true;
     }
 
-    public Map<String, Double> min() {
+    public Map<String, Double> min(int axis) {
         Map<String, Double> result = new HashMap<>();
 
-        for (String label : Data.keySet()) {
-            Obj[] tmp = Data.get(label);
+        switch (axis) {
+            case 0 -> {
+                for (String label : Data.keySet()) {
+                    Obj[] tmp = Data.get(label);
 
-            if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
-                continue;
+                    if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
+                        continue;
 
-            Obj<Double>[] objs = (Obj<Double>[]) tmp;
-            Double currentMin = Double.MAX_VALUE;
+                    Obj<Double>[] objs = (Obj<Double>[]) tmp;
+                    Double currentMin = Double.MAX_VALUE;
 
-            for (Obj obj : objs) {
-                double d = numeric2double(obj.getValue());
+                    for (Obj obj : objs) {
+                        double d = numeric2double(obj.getValue());
 
-                if (d < currentMin)
-                    currentMin = d;
+                        if (d < currentMin)
+                            currentMin = d;
+                    }
+
+                    result.put(label, currentMin);
+                }
             }
+            case 1 -> {
+                for (int i = 0; i < length(); i++) {
+                    double currentMin = Double.MAX_VALUE;
 
-            result.put(label, currentMin);
+                    for (Obj[] value : Data.values()) {
+                        if (value[i].getValue() instanceof String || value[i].getValue() instanceof Character)
+                            break;
+
+                        double d = numeric2double(value[i].getValue());
+
+                        if (d < currentMin)
+                            currentMin = d;
+                    }
+
+                    result.put(String.valueOf(i), currentMin);
+                }
+            }
+            default -> throw new IndexOutOfBoundsException("Axis must be 0 or 1");
         }
 
         return result;
     }
 
-    public Map<String, Double> max() {
+    public Map<String, Double> max(int axis) {
         Map<String, Double> result = new HashMap<>();
 
-        for (String label : Data.keySet()) {
-            Obj[] tmp = Data.get(label);
+        switch (axis) {
+            case 0 -> {
+                for (String label : Data.keySet()) {
+                    Obj[] tmp = Data.get(label);
 
-            if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
-                continue;
+                    if (tmp[0].getValue() instanceof String || tmp[0].getValue() instanceof Character)
+                        continue;
 
-            Obj<Double>[] objs = (Obj<Double>[]) tmp;
-            double currentMax = Double.MIN_VALUE;
+                    Obj<Double>[] objs = (Obj<Double>[]) tmp;
+                    double currentMax = -Double.MAX_VALUE;
 
-            for (Obj obj : objs) {
-                double d = numeric2double(obj.getValue());
+                    for (Obj obj : objs) {
+                        double d = numeric2double(obj.getValue());
 
-                if (d > currentMax)
-                    currentMax = d;
+                        if (d > currentMax)
+                            currentMax = d;
+                    }
+
+                    result.put(label, currentMax);
+                }
             }
+            case 1 -> {
+                for (int i = 0; i < length(); i++) {
+                    double currentMax = -Double.MAX_VALUE;
 
-            result.put(label, currentMax);
+                    for (Obj[] value : Data.values()) {
+                        if (value[i].getValue() instanceof String || value[i].getValue() instanceof Character)
+                            break;
+
+                        double d = numeric2double(value[i].getValue());
+
+                        if (d > currentMax)
+                            currentMax = d;
+                    }
+
+                    result.put(String.valueOf(i), currentMax);
+                }
+            }
+            default -> throw new IndexOutOfBoundsException("Axis must be 0 or 1");
         }
 
         return result;
