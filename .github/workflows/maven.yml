@@ -50,21 +50,25 @@ jobs:
   run-test:
     runs-on: ubuntu-latest
     steps:
-    - name: Set up JDK 21
-      uses: actions/setup-java@v4
-      with:
-        java-version: '21'
-        distribution: 'temurin'
-        cache: maven
+      # Vérification usuelles
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-    # On execute les tests sans interruption
-    - name: Run tests
-      run: mvn clean test
-      continue-on-error: true
+      - name: Set up JDK 21
+        uses: actions/setup-java@v4
+        with:
+          java-version: '21'
+          distribution: 'temurin'
+          cache: maven
 
-    - name: Check if tests passed
-      if: ${{ failure() }}
-      run: echo "::error line=1::Test check failed" && exit 1
+      # On execute les tests sans interruption
+      - name: Run tests
+        run: mvn clean test
+        continue-on-error: true
+
+      - name: Check if tests passed
+        if: ${{ failure() }}
+        run: echo "::error line=1::Test check failed" && exit 1
 
   coverages:
     runs-on: ubuntu-latest
