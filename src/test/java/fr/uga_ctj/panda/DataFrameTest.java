@@ -21,10 +21,10 @@ class DataFrameTest {
     @BeforeEach
     void initTest() {
         data = new Object[][] { //0.4598915,4.4598915,5.4598915,6.4598915
-                new Object[] { 0, 0.003006459891, 0.4598915f, 9_000_000_123_899L, (short) 259/*, (byte) 0*/, 'a' },
-                new Object[] { 1, 4.003006459891, 4.4598915f, 100_000_000_123_899L, (short) 260/*, (byte) 1*/, 'b' },
-                new Object[] { 2, 2.003006459891, 5.4598915f, 11_000_000_123_899L, (short) 261/*, (byte) 2*/, 'c' },
-                new Object[] { 3, 9.003006459891, 6.4598915f, 12_000_000_123_899L, (short) 262/*, (byte) 3*/, 'd' },
+                new Object[] { 0, 0.0030059891, 0.4598915f, 9_000_000_123_899L, (short) 259/*, (byte) 0*/, 'a' },
+                new Object[] { 1, 4.0030059891, 4.4598915f, 100_000_000_123_899L, (short) 260/*, (byte) 1*/, 'b' },
+                new Object[] { 2, 2.0030059891, 5.4598915f, 11_000_000_123_899L, (short) 261/*, (byte) 2*/, 'c' },
+                new Object[] { 3, 9.0030059891, 6.4598915f, 12_000_000_123_899L, (short) 262/*, (byte) 3*/, 'd' },
         };
 
         labels = new String[] { "l1", "l2", "l3", "l4", "l5", "l6"/*, "l7"*/ };
@@ -129,6 +129,7 @@ class DataFrameTest {
                 expected.put(String.valueOf(d), dd.stream().mapToDouble(Double::doubleValue).average().getAsDouble());
             }
         }
+        DataFrame frame2 = new DataFrame(new File("./TestFiles/test.csv"));
         Map<String, Double> result = frame.mean(axis);
 
         assertEquals(expected, result);
@@ -217,14 +218,21 @@ class DataFrameTest {
     }
     @ParameterizedTest
     @ValueSource(strings = { "./TestFiles/test.csv" })
-    void testCSV(String url) {
-        File file = new File(url);
+    void testCSV() {
+        File file = new File("./TestFiles/test.csv");
 
-        DataFrame frame= new DataFrame(file);
+        DataFrame frame = new DataFrame(file);
 
-        DataFrame expected = new DataFrame(labels, values);
+        DataFrame expected = new DataFrame(new String[] { "l1", "l2", "l3", "l4", "l5", "l6" }, new Object[][] {
+                new Object[] { (byte) 0, (byte) 1, (byte) 2, (byte) 3, },
+                new Object[] { 0.00300645991d, 4.00300645991d, 2.00300645991d, 9.00300645991d },
+                new Object[] { 0.4598915f, 4.4598915f, 5.4598915f, 6.4598915f },
+                new Object[] { 9_000_000_123_899L, 100_000_000_123_899L, 11_000_000_123_899L, 12_000_000_123_899L },
+                new Object[] { (short) 259, (short) 260, (short) 261, (short) 262 },
+                new Object[] { "a", "b", "c", "d" }
+        });
 
-        assertEquals(expected,frame);
+        assertEquals(expected, frame);
     }
     @Test
     void testMax() {

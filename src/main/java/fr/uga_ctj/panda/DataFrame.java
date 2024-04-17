@@ -96,20 +96,22 @@ public class DataFrame {
                 Data = new HashMap<>();
                 //first line is the list of row names
                 String[] Row = line.split(",");
-                String[] Columns;
-                Obj[] DataConverted;
-              
-                int k=0;
-                while((line= ReadFile.readLine()) != null)
+                Obj[][] DataConverted;
+                ArrayList<String[]> Lines = new ArrayList<>();
+                while((line= ReadFile.readLine()) != null) {
+                    Lines.add(line.split(","));
+                }
+                DataConverted = new Obj[Lines.get(0).length][Lines.size()];
+                for(int i=0;i<Lines.size();i++)
                 {
-                    //read column by column
-                    Columns = line.split(",");
-                    DataConverted = new Obj[Columns.length];
-                    for (int i = 0; i < Columns.length; i++) {
-                        DataConverted[i] = Convert(Columns[i]);
+                    for(int j=0;j<Lines.get(i).length;j++)
+                    {
+                        DataConverted[j][i] = Convert(Lines.get(i)[j]);
                     }
-                    Data.put(Row[k], DataConverted);
-                    k++;
+                }
+                for(int i=0;i<Lines.get(0).length;i++)
+                {
+                    Data.put(Row[i], DataConverted[i]);
                 }
                 ;
             }
@@ -158,11 +160,11 @@ public class DataFrame {
         try {
             Obj<Double> tmp=new Obj<Double>((Double) Double.parseDouble(data));
             int nbdigit=data.split("\\.")[1].length();
-            //if(tmp.getValue()<Float.MAX_VALUE && tmp.getValue()>Float.MIN_VALUE && nbdigit<=7)
+            if(tmp.getValue()<Float.MAX_VALUE && tmp.getValue()>Float.MIN_VALUE && nbdigit<=7)
             {
-            //    return new Obj<Float>((float) Float.parseFloat(data));
+                return new Obj<Float>((float) Float.parseFloat(data));
             }
-            //else
+            else
             {
                 return tmp;
             }
@@ -307,7 +309,7 @@ public class DataFrame {
             case Long l -> l;
             case Float f -> f;
             case Double d -> d;
-            case null, default -> throw new RuntimeException("Never happen");
+            case null, default -> throw new RuntimeException("Type Unknown");
         };
     }
 
